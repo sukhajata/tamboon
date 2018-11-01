@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Tamboon</string>
+    <string name="title_charity_detail">Make a donation</string>
+    <string name="card_name">Name on card</string>
+    <string name="card_number">Card number</string>
+    <string name="amount">Amount ฿</string>
+    <string name="cvv">CVV</string>
+    <string name="pay">Pay</string>
+    <string name="ok">OK</string>
+</resources>
