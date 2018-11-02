@@ -32,7 +32,7 @@ import co.omise.android.ui.CreditCardEditText;
 import omise.sukhajata.com.timomise.interfaces.DownloadCallback;
 import omise.sukhajata.com.timomise.utility.ApiManager;
 
-public class DonationActivity extends AppCompatActivity implements DownloadCallback {
+public class DonationActivity extends AppCompatActivity implements DownloadCallback<String> {
 
     public static final String ARG_CHARITY_NAME = "charity_name";
 
@@ -80,7 +80,7 @@ public class DonationActivity extends AppCompatActivity implements DownloadCallb
         });
 
         //set up validation
-        EditText name = findViewById(R.id.card_name);
+        final EditText name = findViewById(R.id.card_name);
         name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -89,11 +89,13 @@ public class DonationActivity extends AppCompatActivity implements DownloadCallb
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.length() > 3) {
+                if (charSequence.length() > 2) {
                     mNameValid = true;
+                    name.setBackgroundColor(getResources().getColor(R.color.white));
                     checkValidity();
                 } else {
                     mNameValid = false;
+                    name.setBackgroundColor(getResources().getColor(R.color.pink));
                     checkValidity();
                 }
             }
@@ -104,7 +106,7 @@ public class DonationActivity extends AppCompatActivity implements DownloadCallb
             }
         });
 
-        CreditCardEditText txtNumber = findViewById(R.id.card_number);
+        final CreditCardEditText txtNumber = findViewById(R.id.card_number);
         txtNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -116,9 +118,11 @@ public class DonationActivity extends AppCompatActivity implements DownloadCallb
                 String number = charSequence.toString().replaceAll("\\s+", "");
                 if (number.length() == 16 && CardNumber.luhn(charSequence.toString())) {
                     mNumberValid = true;
+                    txtNumber.setBackgroundColor(getResources().getColor(R.color.white));
                     checkValidity();
                 } else {
                     mNumberValid = false;
+                    txtNumber.setBackgroundColor(getResources().getColor(R.color.pink));
                     checkValidity();
                 }
             }
@@ -129,7 +133,7 @@ public class DonationActivity extends AppCompatActivity implements DownloadCallb
             }
         });
 
-        EditText txtCvv = findViewById(R.id.card_cvv);
+        final EditText txtCvv = findViewById(R.id.card_cvv);
         txtCvv.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -140,9 +144,11 @@ public class DonationActivity extends AppCompatActivity implements DownloadCallb
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence.length() == 3) {
                     mCvvValid = true;
+                    txtCvv.setBackgroundColor(getResources().getColor(R.color.white));
                     checkValidity();
                 } else {
                     mCvvValid = false;
+                    txtCvv.setBackgroundColor(getResources().getColor(R.color.pink));
                     checkValidity();
                 }
             }
@@ -153,7 +159,7 @@ public class DonationActivity extends AppCompatActivity implements DownloadCallb
             }
         });
 
-        EditText txtAmount = findViewById(R.id.card_amount);
+        final EditText txtAmount = findViewById(R.id.card_amount);
         txtAmount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -164,9 +170,11 @@ public class DonationActivity extends AppCompatActivity implements DownloadCallb
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence != null && Integer.parseInt(charSequence.toString()) > 20) {
                     mAmountValid = true;
+                    txtAmount.setBackgroundColor(getResources().getColor(R.color.white));
                     checkValidity();
                 } else {
                     mAmountValid = false;
+                    txtAmount.setBackgroundColor(getResources().getColor(R.color.pink));
                     checkValidity();
                 }
             }
@@ -277,19 +285,8 @@ public class DonationActivity extends AppCompatActivity implements DownloadCallb
     }
 
     @Override
-    public void onDownloadCompleted(Object result) {
-
-        if (result instanceof JSONObject) {
-          JSONObject json = (JSONObject) result;
-          try {
-              String message = (String)json.get("message");
-              onCompleted(message);
-          } catch (JSONException ex) {
-              onCompleted(ex.getMessage());
-          }
-        } else {
-            onCompleted(result.toString());
-        }
+    public void onDownloadCompleted(String result) {
+       onCompleted(result);
     }
 
     @Override

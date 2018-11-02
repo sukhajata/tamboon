@@ -102,7 +102,12 @@ public class ApiManager {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            callback.onDownloadCompleted(response);
+                            try {
+                                String message = (String)response.get("message");
+                                callback.onDownloadCompleted(message);
+                            } catch (JSONException ex) {
+                                callback.onDownloadError(DownloadCallback.PARSING_ERROR, "Unknown response format.");
+                            }
                         }
                     },
                     new Response.ErrorListener() {

@@ -20,6 +20,8 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.security.ProviderInstaller;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
 import omise.sukhajata.com.timomise.interfaces.DownloadCallback;
 import omise.sukhajata.com.timomise.model.Charity;
 import omise.sukhajata.com.timomise.utility.ApiManager;
@@ -30,7 +32,7 @@ import java.util.List;
  * An activity representing a list of Charities.
  */
 public class CharityListActivity extends AppCompatActivity implements
-        DownloadCallback,
+        DownloadCallback<List<Charity>>,
         ProviderInstaller.ProviderInstallListener{
 
     private static final int DONATION = 100;
@@ -125,12 +127,10 @@ public class CharityListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onDownloadCompleted(Object result) {
-        if (result instanceof List) {
-            RecyclerView recyclerView = findViewById(R.id.charity_list);
-            assert recyclerView != null;
-            recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, (List<Charity>)result));
-        }
+    public void onDownloadCompleted(List<Charity> result) {
+        RecyclerView recyclerView = findViewById(R.id.charity_list);
+        assert recyclerView != null;
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, result));
     }
 
     @Override
